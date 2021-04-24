@@ -2,10 +2,25 @@ const axios = require('axios');
 const async = require('async');
 const fs = require('fs');
 const path = require('path');
-const {
-    WriteFiles
-} = require("./fspromise.js");
-
+// 写入文件操作 promise 实现
+const WriteFiles = (path, content) => {
+    return new Promise((resolve, reject) => {
+        fs.writeFile(
+            path,
+            content, {
+                flag: "a",
+                encoding: "utf-8",
+            },
+            function(err) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(path);
+                }
+            }
+        );
+    });
+};
 
 
 const req = function(url) {
@@ -177,53 +192,3 @@ const main = async(mainUrl) => {
 const startUrl = 'https://mp.weixin.qq.com/s/HB1JYK-YlXfN9sBl5qFu5g';
 main(startUrl);
 
-
-// function voiceFun(voiceUrl, callback) {
-//     // let temp = {};
-//     let voicePromise = parseVoiceUrl(voiceUrl);
-//     voicePromise.then(res => {
-//         console.log(`当前是第${Counts++}个，共${allVoices.length}个\n`);
-//         callback(null, res);
-//     });
-//     // voicePromise.then(async(res) => {
-//     //     // console.log(`当前是第${Counts+1}个，共${allVoices.length}个音频\n`);
-//     //     // console.log(res);
-//     //     let i = parseInt(Counts / 20);
-//     //     temp.type = typeUrls.title[i];
-//     //     temp.title = allTitles[Counts];
-//     //     temp.url = allVoices[Counts];
-//     //     temp.downloadLink = res;
-//     //     WriteFiles(`./weixin/${temp.type}/${temp.type}.json`, `${JSON.stringify(temp)},`);
-//     //     // 保存音频
-//     //     let voicePath = `./weixin/${temp.type}/${temp.title}.mp3`
-//     //     downloadVoice(temp.downloadLink, voicePath).then((voiceMsg) => {
-//     //         console.log(`当前是第${Counts+1}个，共${allVoices.length}个音频\n`);
-//     //         console.log(voiceMsg);
-//     //         Counts++;
-//     //     });
-//     //     // temp = null;
-//     //     callback(null, temp.type);
-//     // });
-// }
-// let allVoiceFun = (err, allResults) => {
-//     // Counts = 0;
-//     allResults.forEach(async(item, i) => {
-//         // let temp = {};
-//         // temp.downloadLink = item;
-//         // temp.type = typeUrls.title[(1 % 20)];
-//         // temp.title = allTitles[i];
-//         // temp.url = allVoices[i];
-//         // WriteFiles(`./weixin/${temp.type}/${temp.type}.json`, `${JSON.stringify(temp)},`);
-//         // let voicePath = `./weixin/${temp.type}/${temp.title}.mp3`
-//         // console.log(`正在保存第 ${i+1} 个，共 ${allResults.length} 个\n`);
-//         // let voiceMsg = await downloadVoice(temp.downloadLink, voicePath);
-//         // console.log(voiceMsg);
-//         // downloadVoice(item);
-//         // if (i == 0) {
-//         //     WriteFiles(`./weixin/${item}/${item}.json`, `]`);
-//         // } else if (item != results[i - 1]) {
-//         //     WriteFiles(`./weixin/${item}/${item}.json`, `]`);
-//         // }
-//     });
-//     // console.log('全部获取完毕,文件写入完成');
-// };
